@@ -1,0 +1,317 @@
+---
+title: "Webhook Payloads"
+description: "Detailed examples of webhook request and response payloads for all event types"
+"og:title": "Webhook Request & Response Payloads | Revenueable AI"
+---
+
+## Request Payloads
+
+These are the JSON payloads your webhook endpoint will receive for different events.
+
+### Call Completed Event
+
+Triggered when a call attempt finishes (completed, failed, or retry).
+
+```json
+{
+  "event_type": "call_completed",
+  "call_duration": 15.733745,
+  "agent_message_count": 3,
+  "user_message_count": 2,
+  "call_type": "outbound",
+  "custom_args_values": {
+    "callee_name": "John",
+    "order_value": "70000",
+    "company_name": "Acme Corp"
+  },
+  "to_number": "+919875436897",
+  "from_number": "+919875436897",
+  "bulk_list_id": null,
+  "call_id": "4b30f5dc-7f86-4e4c-a3aa-15c01138559b",
+  "call_sid": "f46cb9f4-f6ca-4d7d-abc9-02c226b95ec0",
+  "agent_id": "cbaf9944-3e34-43b6-b3e8-6a905de16639",
+  "workspace_id": "442a9db3-0fd4-47dc-b8cd-cc7eedfa272f",
+  "status": "completed",
+  "called_on": "2025-12-14T19:37:13.310707Z",
+  "agent_name": "Payment Reminder Agent",
+  "version_id": "a1b2c3d4-5e6f-7890-abcd-ef1234567890",
+  "call_cost": 0.15,
+  "overall_latency_seconds": 0.892345,
+  "first_utterance_seconds": 0.456789,
+  "transcript": [
+    {
+      "bot": "Hello abhishek, this is Caroline from Revenueable AI. I'm calling to remind you about your upcoming payment of dads due on twelve. Let's ensure everything is on track!"
+    },
+    {
+      "user": "Yes. Yes. Everything is on track. Thank you so much,"
+    },
+    {
+      "user": "Bye."
+    },
+    {
+      "bot": "Thank"
+    },
+    {
+      "bot": "you for"
+    }
+  ],
+  "retry_count": 0,
+  "recording_url": null
+}
+
+```
+
+### Recording Completed Event
+
+Triggered when call recording is processed and ready for download.
+
+```json
+{
+  "call_id": "4b30f5dc-7f86-4e4c-a3aa-15c01138559b",
+  "event_type": "recording_completed",
+  "recording_url": "https://aps1.media.plivo.com/v1/Account/MZYZHIMM/Recording/0f27f498-2f98-403e-8239-10e24b67b604.mp3",
+  "recording_duration": 16.28,
+  "call_sid": "f46cb9f4-f6ca-4d7d-abc9-02c226b95ec0",
+  "custom_args_values": {
+    "callee_name": "John",
+    "order_value": "70000",
+    "company_name": "Acme Corp"
+  },
+  "bulk_list_id": "f46cb9f4-f6ca-4d7d-abc9-02c226b95ec0",
+  "agent_name": "Payment Reminder Agent",
+  "version_id": "a1b2c3d4-5e6f-7890-abcd-ef1234567890",
+  "call_cost": 0.15,
+  "overall_latency_seconds": 0.892345,
+  "first_utterance_seconds": 0.456789
+}
+
+```
+
+### Platform Analysis Event
+
+Triggered when Revenueable AI's built-in analysis completes.
+
+```json
+{
+  "event_type": "platform_analysis_completed",
+  "analysis_data": {
+    "key_points": [
+      "Reminder about upcoming payment due on the 12th for dad's payment.",
+      "User acknowledged the reminder and stated everything is on track.",
+      "No issues or new concerns were raised; conversation ended amicably."
+    ],
+    "action_items": [],
+    "summary": "Agent reminded the customer about an upcoming payment due on the 12th for dad's payment. The customer confirmed that everything is on track and did not request any further assistance or information.",
+    "classification": "payment_confirmed",
+    "callback_requested": false,
+    "callback_requested_time": null,
+    "status": "analyzed",
+    "call_disconnect_reason": "agent_hangup",
+    "timezone": "Asia/Kolkata"
+  },
+  "call_type": "outbound",
+  "custom_args_values": {
+    "callee_name": "John",
+    "order_value": "70000",
+    "company_name": "Acme Corp"
+  },
+  "to_number": "+918882876897",
+  "from_number": "+918035736726",
+  "bulk_list_id": null,
+  "call_id": "4b30f5dc-7f86-4e4c-a3aa-15c01138559b",
+  "call_sid": "f46cb9f4-f6ca-4d7d-abc9-02c226b95ec0",
+  "agent_id": "cbaf9944-3e34-43b6-b3e8-6a905de16639",
+  "workspace_id": "442a9db3-0fd4-47dc-b8cd-cc7eedfa272f",
+  "status": "completed",
+  "called_on": "2025-12-14T19:37:13.310707Z", (UTC)
+  "agent_name": "Payment Reminder Agent",
+  "version_id": "a1b2c3d4-5e6f-7890-abcd-ef1234567890",
+  "call_cost": 0.15,
+  "overall_latency_seconds": 0.892345,
+  "first_utterance_seconds": 0.456789,
+  "transcript": [
+    {
+      "bot": "Hello abhishek, this is Caroline from Revenueable AI. I'm calling to remind you about your upcoming payment of dads due on twelve. Let's ensure everything is on track!"
+    },
+    {
+      "user": "Yes. Yes. Everything is on track. Thank you so much,"
+    },
+    {
+      "user": "Bye."
+    },
+    {
+      "bot": "Thank"
+    },
+    {
+      "bot": "you for"
+    }
+  ],
+  "call_duration": 15.73,
+  "agent_message_count": 3,
+  "user_message_count": 2
+}
+
+```
+
+### Client Analysis Event
+
+Triggered when your custom analysis completes based on your configured prompts.
+
+```json
+{
+  "event_type": "client_analysis_completed",
+  "analysis_data": {
+    "lead_quality": "high",
+    "intent_score": 8.5,
+    "next_action": "follow_up",
+    "purchase_probability": 0.75,
+    "customer_segment": "premium",
+    "satisfaction_score": 9
+  },
+  "call_type": "outbound",
+  "custom_args_values": {
+    "due_date": "12",
+    "due_amount": "dads",
+    "callee_name": "abhishek",
+    "transfer_to": "+917404156687",
+    "mobile_number": "+918882876897"
+  },
+  "to_number": "+918882876897",
+  "from_number": "+918035736726",
+  "bulk_list_id": null,
+  "call_id": "4b30f5dc-7f86-4e4c-a3aa-15c01138559b",
+  "call_sid": "f46cb9f4-f6ca-4d7d-abc9-02c226b95ec0",
+  "agent_id": "cbaf9944-3e34-43b6-b3e8-6a905de16639",
+  "workspace_id": "442a9db3-0fd4-47dc-b8cd-cc7eedfa272f",
+  "status": "completed",
+  "called_on": "2025-12-14T19:37:13.310707Z",
+  "agent_name": "Payment Reminder Agent",
+  "version_id": "a1b2c3d4-5e6f-7890-abcd-ef1234567890",
+  "call_cost": 0.15,
+  "overall_latency_seconds": 0.892345,
+  "first_utterance_seconds": 0.456789,
+  "transcript": [
+    {
+      "bot": "Hello abhishek, this is Caroline from Revenueable AI. I'm calling to remind you about your upcoming payment of dads due on twelve. Let's ensure everything is on track!"
+    },
+    {
+      "user": "Yes. Yes. Everything is on track. Thank you so much,"
+    },
+    {
+      "user": "Bye."
+    },
+    {
+      "bot": "Thank"
+    },
+    {
+      "bot": "you for"
+    }
+  ],
+  "call_duration": 15.73,
+  "agent_message_count": 3,
+  "user_message_count": 2
+}
+
+```
+
+
+## Implementation Examples
+
+### Node.js/Express
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+// Handle all webhook events
+app.post('/webhooks/:eventType', (req, res) => {
+  const eventData = req.body;
+  const eventType = req.params.eventType;
+  
+  console.log(`Received ${eventData.event_type} for call ${eventData.call_id}`);
+  
+  // Process based on event type
+  switch(eventData.event_type) {
+    case 'call_completed':
+      // Store transcript, update call status
+      console.log(`Call duration: ${eventData.call_duration}s`);
+      break;
+      
+    case 'recording_completed':
+      // Download and store recording
+      console.log(`Recording: ${eventData.recording_url}`);
+      break;
+      
+    case 'platform_analysis_completed':
+      // Process AI insights
+      console.log(`Classification: ${eventData.analysis_data.classification}`);
+      break;
+      
+    case 'client_analysis_completed':
+      // Handle custom analysis
+      console.log(`Lead quality: ${eventData.analysis_data.lead_quality}`);
+      break;
+  }
+  
+  // Always acknowledge receipt
+  res.status(200).json({ received: true });
+});
+
+app.listen(3000);
+```
+
+## Field Descriptions
+
+### Common Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `event_type` | string | Type of event: `call_completed`, `recording_completed`, `platform_analysis_completed`, `client_analysis_completed` |
+| `call_id` | string | Unique identifier for the call |
+| `call_sid` | string | Telephony provider's call identifier (e.g., Twilio Call SID, Plivo Call UUID) |
+| `agent_id` | string | ID of the AI agent that handled the call |
+| `workspace_id` | string | ID of your workspace |
+| `custom_args_values` | object | Custom data you provided when initiating the call |
+| `agent_name` | string | Display name of the AI agent that handled the call |
+| `version_id` | string | UUID of the agent version used for this call |
+| `call_cost` | number | Cost of the call in credits (null if not yet calculated) |
+| `overall_latency_seconds` | number | Total response latency in seconds (sum of median latencies across all metrics) |
+| `first_utterance_seconds` | number | Time to first AI response (TTS) in seconds |
+
+### Call Completed Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `call_duration` | number | Duration of the call in seconds (call_completed only) |
+| `call_type` | string | Direction: `inbound`, `outbound`, or `webcall` |
+| `status` | string | Final call status: `completed`, `failed`, `retry` (call_completed only) |
+| `to_number` | string | Phone number that received the call |
+| `from_number` | string | Phone number that made the call |
+| `call_sid` | string | Provider call ID (e.g., from Twilio/Plivo) |
+| `transcript` | array | Array of conversation turns with `role` and `content` fields |
+| `custom_args_values` | object | Custom data you provided when initiating the call |
+| `retry_count` | number | Number of retry attempts (0 for first attempt) (call_completed only) |
+
+
+### Recording Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `recording_url` | string | URL of the call recording |
+| `recording_duration` | number | Duration of the recording in seconds |
+
+### Analysis Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `analysis_data` | object | Analysis results - structure varies by analysis type |
+| `summary` | string | Concise summary of conversation purpose and outcome (platform analysis) |
+| `classification` | string | Call category label (e.g., 'qualified_lead') (platform analysis) |
+| `key_points` | array | Array of important conversation takeaways (platform analysis) |
+| `action_items` | array | Array of tasks or follow-up actions (platform analysis) |
+| `callback_requested_time` | string | ISO 8601 timestamp when callback was requested (platform analysis) |
+| `status` | string | Analysis status, always 'analyzed' (platform analysis) |
+| `call_disconnect_reason` | string | Reason call ended: 'agent_hangup' or 'user_hangup' (platform analysis) |
+| `timezone` | string | Timezone used for the call (platform analysis) | 

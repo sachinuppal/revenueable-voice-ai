@@ -1,0 +1,4569 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Revenueable AI API Documentation",
+    "description": "This is the documentation for the Revenueable AI APIs. The Revenueable AI API follows RESTful principles, making it intuitive and easy to integrate with your applications. All API requests should be made to the base URL. The API accepts and returns data in JSON format. Ensure your requests include the appropriate Content-Type header for POST and PATCH requests.",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://prod-api.revenueable.ai/ca/api/v0"
+    }
+  ],
+  "tags": [
+    {
+      "name": "workspace",
+      "description": "Endpoints for managing your workspace."
+    },
+    {
+      "name": "agent",
+      "description": "Endpoints for managing assistants (agents)."
+    },
+    {
+      "name": "calling",
+      "description": "Endpoints for making and managing calls."
+    },
+    {
+      "name": "campaign",
+      "description": "Endpoints for managing campaigns."
+    },
+    {
+      "name": "analytics",
+      "description": "Endpoints for accessing call analytics and performance metrics."
+    },
+    {
+      "name": "termination",
+      "description": "Endpoints for terminating active calls using different methods."
+    },
+    {
+      "name": "knowledgebase",
+      "description": "Endpoints for managing knowledge bases."
+    }
+  ],
+  "paths": {
+    "/workspace": {
+      "get": {
+        "tags": [
+          "workspace"
+        ],
+        "summary": "Get Workspace Info",
+        "x-mint": {
+          "metadata": {
+            "title": "Get Workspace Info | Revenueable AI",
+            "og:title": "Get Workspace Info | Revenueable AI"
+          }
+        },
+        "description": "Retrieves information about your current workspace.",
+        "operationId": "getWorkspaceInfo",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: Information about the current workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "workspace_info": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "d079bcb3-72a3-42dc-9586-edf0328e2973"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Siddharth @ DesiVocal's Workspace"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-16T13:03:29.947147+00:00"
+                        },
+                        "credits": {
+                          "type": "integer",
+                          "example": 3025
+                        },
+                        "locked_credits": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "api_key": {
+                          "type": "string",
+                          "example": "7251cb4b--f52b-4b47-a230-f626ecad3e85"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "401 Unauthorized"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid credentials"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "500 Internal Server Error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "An unexpected error occurred on the server."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspace/users": {
+      "get": {
+        "tags": [
+          "workspace"
+        ],
+        "summary": "List Workspace Users",
+        "x-mint": {
+          "metadata": {
+            "og:title": "List Workspace Users | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a list of all users in your current workspace.",
+        "operationId": "listWorkspaceUsers",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return (default: 20, max: 100).",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "example": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip (default: 0).",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: A list of users in the workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "workspace_users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+                          },
+                          "username": {
+                            "type": "string",
+                            "example": "sahil"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "user@example.com"
+                          },
+                          "role": {
+                            "type": "string",
+                            "example": "member"
+                          },
+                          "invite_status": {
+                            "type": "string",
+                            "example": "success"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/workspace/numbers": {
+      "get": {
+        "tags": [
+          "workspace"
+        ],
+        "summary": "Get Workspace Numbers",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Workspace Numbers | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a list of available phone numbers in your workspace.",
+        "operationId": "getWorkspaceNumbers",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return (default: 20, max: 100).",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "example": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip (default: 0).",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: A list of available phone numbers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "workspace_numbers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "5d7f9a2b-1c3e-4f6a-8b9c-0d1e2f3a4b5c"
+                          },
+                          "number": {
+                            "type": "string",
+                            "example": "+1234567890"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-12-16T13:03:29.947147+00:00"
+                          },
+                          "call_count": {
+                            "type": "integer",
+                            "example": 0
+                          },
+                          "agent": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                              },
+                              "agent_display_name": {
+                                "type": "string",
+                                "example": "Sales Assistant"
+                              }
+                            }
+                          },
+                          "is_inbound_enabled": {
+                            "type": "boolean",
+                            "example": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/workspace/all": {
+      "get": {
+        "tags": [
+          "workspace"
+        ],
+        "summary": "Get All User Workspaces",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get All User Workspaces | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a list of all workspaces accessible to the current user.",
+        "operationId": "getAllUserWorkspaces",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: A list of user workspaces.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "workspaces": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "d079bcb3-72a3-42dc-9586-edf0328e2973"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Siddharth @ DesiVocal's Workspace"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-12-16T13:03:29.947147+00:00"
+                          },
+                          "role": {
+                            "type": "string",
+                            "example": "owner"
+                          },
+                          "credits": {
+                            "type": "integer",
+                            "example": 3025
+                          },
+                          "locked_credits": {
+                            "type": "integer",
+                            "example": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/workspace/api-key": {
+      "patch": {
+        "tags": [
+          "workspace"
+        ],
+        "summary": "Regenerate API Key",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Regenerate API Key | Revenueable AI"
+          }
+        },
+        "description": "Regenerates a new API key for the current workspace.",
+        "operationId": "regenerateApiKey",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your current Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: New API key generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "new_api_key": {
+                      "type": "string",
+                      "example": "e89b12d3-a456-426c-8001-f05de02b54b4"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/agent/all": {
+      "get": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Get Assistants",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Assistants | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a list of all available assistants in your workspace.",
+        "operationId": "getAssistants",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return (default: 20, max: 100).",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "example": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip (default: 0).",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: A list of assistants.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "agents": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                              },
+                              "agent_display_name": {
+                                "type": "string",
+                                "example": "Sales Assistant"
+                              },
+                              "agent_type": {
+                                "type": "string",
+                                "example": "outbound"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-16T13:03:29.947147+00:00"
+                              },
+                              "updated_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-16T14:15:32.123456+00:00"
+                              },
+                              "template_name": {
+                                "type": "string",
+                                "example": "sales"
+                              },
+                              "template_label": {
+                                "type": "string",
+                                "example": "Sales Agent"
+                              },
+                              "template_icon": {
+                                "type": "string",
+                                "example": "\ud83d\udcbc"
+                              },
+                              "template_source": {
+                                "type": "string",
+                                "example": "custom"
+                              },
+                              "call_count": {
+                                "type": "integer",
+                                "example": 47
+                              },
+                              "custom_variables": {
+                                "type": "object",
+                                "example": {
+                                  "callee_name": "string",
+                                  "mobile_number": "string",
+                                  "company": "string",
+                                  "lead_source": "string"
+                                }
+                              },
+                              "tools": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "example": []
+                              },
+                              "is_archived": {
+                                "type": "boolean",
+                                "example": false
+                              },
+                              "secondary_language": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "hi-IN"
+                              },
+                              "secondary_voice_id": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "4c6d8e3b-9f0a-5b2c-ad7e-3f6a9b8c5d7e"
+                              },
+                              "template_type": {
+                                "type": "string",
+                                "example": "outbound"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/agent/voices": {
+      "get": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Get Assistant Voices",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Assistant Voices | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a list of available voices for assistants, optionally filtered by language.",
+        "operationId": "getAssistantVoices",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter voices by language (e.g., 'en-US', 'hi-IN'). Multiple languages can be comma-separated.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: A list of available voices.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "voices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "3b5c7d2a-8e9f-4a1b-9c6d-2e5f8a7b3c4d"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Sarah"
+                          },
+                          "languages": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "example": [
+                              "en-US",
+                              "en-GB"
+                            ]
+                          },
+                          "voice_previews": {
+                            "type": "object",
+                            "properties": {
+                              "en-US": {
+                                "type": "string",
+                                "format": "uri",
+                                "example": "https://example.com/voice-preview-en-us.mp3"
+                              }
+                            }
+                          },
+                          "image_url": {
+                            "type": "string",
+                            "format": "uri",
+                            "example": "https://example.com/voice-avatar.jpg",
+                            "nullable": true
+                          },
+                          "gender": {
+                            "type": "string",
+                            "example": "female"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-12-16T13:03:29.947147+00:00"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-12-16T13:03:29.947147+00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Failed to fetch agent voices"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agent/v1": {
+      "patch": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Edit Assistant",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Edit Assistant | Revenueable AI"
+          }
+        },
+        "description": "Updates an existing assistant with new configuration settings. Each operation requires specific fields to be provided.",
+        "operationId": "editAssistant",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "operation",
+                  "agent_id"
+                ],
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "attach_inbound_number",
+                      "remove_inbound_number",
+                      "attach_kb",
+                      "remove_kb",
+                      "edit_custom_vars",
+                      "edit_language",
+                      "edit_voice",
+                      "edit_prompt",
+                      "edit_noise_settings",
+                      "edit_agent_display_name",
+                      "edit_intro_message",
+                      "edit_query_phrases",
+                      "edit_dtmf_settings",
+                      "edit_vad_settings",
+                      "edit_agent_whitelisted_domains",
+                      "edit_voice_speed",
+                      "edit_extract_callee_name",
+                      "edit_vocab",
+                      "edit_api_settings",
+                      "edit_secondary_language",
+                      "edit_secondary_voice"
+                    ],
+                    "example": "edit_agent_display_name"
+                  },
+                  "agent_id": {
+                    "type": "string",
+                    "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                  },
+                  "agent_display_name": {
+                    "type": "string",
+                    "example": "Updated Sales Assistant"
+                  },
+                  "language": {
+                    "type": "string",
+                    "enum": [
+                      "en-US",
+                      "en-IN",
+                      "hi-IN",
+                      "ta-IN",
+                      "te-IN",
+                      "kn-IN",
+                      "mr-IN",
+                      "gu-IN",
+                      "ar-AE"
+                    ],
+                    "example": "en-US"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "example": "3b5c7d2a-8e9f-4a1b-9c6d-2e5f8a7b3c4d"
+                  },
+                  "secondary_voice_id": {
+                    "type": "string",
+                    "example": "4c6d8e3b-9f0a-5b2c-ad7e-3f6a9b8c5d7e"
+                  },
+                  "secondary_language": {
+                    "type": "string",
+                    "enum": [
+                      "en-US",
+                      "en-IN",
+                      "hi-IN",
+                      "ta-IN",
+                      "te-IN",
+                      "kn-IN",
+                      "mr-IN",
+                      "gu-IN",
+                      "ar-AE"
+                    ],
+                    "example": "hi-IN"
+                  },
+                  "agent_prompt": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "example": "You are a helpful sales assistant."
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "prompt_sections": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "section_title": {
+                                  "type": "string"
+                                },
+                                "section_content": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "custom_variables": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "callee_name",
+                      "mobile_number",
+                      "company",
+                      "lead_source"
+                    ]
+                  },
+                  "number_id": {
+                    "type": "string",
+                    "example": "5d7f9a2b-1c3e-4f6a-8b9c-0d1e2f3a4b5c"
+                  },
+                  "kb_id": {
+                    "type": "string",
+                    "example": "7a9c2d5e-4f6b-1a2b-3c4d-5e6f7a8b9c0d"
+                  },
+                  "whitelisted_domains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "https://www.revenueable.ai",
+                      "https://example.com"
+                    ]
+                  },
+                  "voice_speed": {
+                    "type": "number",
+                    "example": 1.2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response: Assistant updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Agent updated successfully!"
+                    },
+                    "agent_id": {
+                      "type": "string",
+                      "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters or request format.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Selected voice does not support the specified language"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Not Found - Assistant not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Agent not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Failed to edit agent"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agent/{agent_id}": {
+      "get": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Get Assistant By ID",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Assistant By ID | Revenueable AI"
+          }
+        },
+        "description": "Retrieves detailed information about a specific assistant by its ID.",
+        "operationId": "getAssistantById",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "path",
+            "description": "(Required) ID of the assistant to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: Detailed information about the assistant.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agents": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                        },
+                        "agent_display_name": {
+                          "type": "string",
+                          "example": "Sales Assistant"
+                        },
+                        "agent_type": {
+                          "type": "string",
+                          "example": "outbound"
+                        },
+                        "whitelisted_domains": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "https://www.revenueable.ai",
+                            "https://example.com"
+                          ]
+                        },
+                        "language": {
+                          "type": "string",
+                          "example": "en-US"
+                        },
+                        "form_fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "example": [
+                            {
+                              "key": "company_name",
+                              "value": "Revenueable AI"
+                            },
+                            {
+                              "key": "product",
+                              "value": "AI calling platform"
+                            }
+                          ]
+                        },
+                        "voice": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "3b5c7d2a-8e9f-4a1b-9c6d-2e5f8a7b3c4d"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Sarah"
+                            },
+                            "voice_preview": {
+                              "type": "string",
+                              "format": "uri",
+                              "example": "https://example.com/voice-preview.mp3"
+                            }
+                          }
+                        },
+                        "agent_config": {
+                          "type": "object",
+                          "example": {
+                            "custom_variables": {
+                              "callee_name": "string",
+                              "mobile_number": "string"
+                            },
+                            "agent_prompt": "You are a helpful sales assistant.",
+                            "intro_message": "Hello! I'm calling from Revenueable AI."
+                          }
+                        },
+                        "knowledge_base_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "7a9c2d5e-4f6b-1a2b-3c4d-5e6f7a8b9c0d"
+                        },
+                        "knowledge_base_name": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "Product FAQ"
+                        },
+                        "template_name": {
+                          "type": "string",
+                          "example": "sales"
+                        },
+                        "template_label": {
+                          "type": "string",
+                          "example": "Sales Agent"
+                        },
+                        "template_icon": {
+                          "type": "string",
+                          "example": "\ud83d\udcbc"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-16T13:03:29.947147+00:00"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-16T14:15:32.123456+00:00"
+                        },
+                        "tools": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "config": {
+                                "type": "object"
+                              },
+                              "tool_type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "example": []
+                        },
+                        "secondary_language": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "hi-IN"
+                        },
+                        "secondary_voice_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "4c6d8e3b-9f0a-5b2c-ad7e-3f6a9b8c5d7e"
+                        },
+                        "template_type": {
+                          "type": "string",
+                          "example": "outbound"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Not Found - Resource doesn't exist."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Delete Assistant",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Delete Assistant | Revenueable AI"
+          }
+        },
+        "description": "Deletes an assistant by archiving it (soft delete).",
+        "operationId": "deleteAssistant",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "path",
+            "description": "(Required) ID of the assistant to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: Assistant deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Agent deleted successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Not Found - Assistant not found."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/calling/outbound/individual": {
+      "post": {
+        "tags": [
+          "calling"
+        ],
+        "summary": "Initiate Individual Call",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Initiate Individual Call | Revenueable AI"
+          }
+        },
+        "description": "Starts a new individual outbound call to a specified recipient. The from_number field is required and should be a valid phone number with country code.",
+        "operationId": "initiateIndividualCall",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "mobile_number",
+                  "agent_id",
+                  "from_number"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the person to call",
+                    "example": "John Doe"
+                  },
+                  "mobile_number": {
+                    "type": "string",
+                    "description": "The phone number to call (must include country code, e.g., +91 for India)",
+                    "example": "+1234567890"
+                  },
+                  "agent_id": {
+                    "type": "string",
+                    "description": "UUID of the agent that will handle the call",
+                    "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                  },
+                  "from_number": {
+                    "type": "string",
+                    "description": "The phone number to call from (with country code)",
+                    "example": "+1987654321"
+                  },
+                  "custom_args_values": {
+                    "type": "object",
+                    "description": "Custom variables that will be replaced in the agent's prompt using @{{variable_name}} syntax",
+                    "properties": {
+                      "company_name": {
+                        "type": "string",
+                        "description": "Company name for context",
+                        "example": "XYZ Corp"
+                      },
+                      "appointment_date": {
+                        "type": "string",
+                        "description": "Appointment date",
+                        "example": "2025-01-20"
+                      },
+                      "product_name": {
+                        "type": "string",
+                        "description": "Product name for sales calls",
+                        "example": "Premium Service"
+                      }
+                    },
+                    "example": {
+                      "company_name": "XYZ Corp",
+                      "appointment_date": "2025-01-20",
+                      "product_name": "Premium Service"
+                    }
+                  },
+                  "call_config": {
+                    "type": "object",
+                    "description": "(Optional) Override default call configuration",
+                    "properties": {
+                      "idle_timeout_warning": {
+                        "type": "integer",
+                        "description": "Seconds before idle warning (default: 5)",
+                        "default": 5,
+                        "example": 10
+                      },
+                      "idle_timeout_end": {
+                        "type": "integer",
+                        "description": "Seconds before call termination (default: 10)",
+                        "default": 10,
+                        "example": 15
+                      },
+                      "max_call_length": {
+                        "type": "integer",
+                        "description": "Maximum call duration in seconds (default: 240)",
+                        "default": 240,
+                        "example": 300
+                      },
+                      "call_retry_config": {
+                        "type": "object",
+                        "description": "Retry configuration for failed calls",
+                        "properties": {
+                          "retry_count": {
+                            "type": "integer",
+                            "description": "Number of retry attempts",
+                            "example": 3
+                          },
+                          "retry_busy": {
+                            "type": "integer",
+                            "description": "Minutes to wait if busy (default: 30)",
+                            "example": 30
+                          },
+                          "retry_not_picked": {
+                            "type": "integer",
+                            "description": "Minutes to wait if not picked (default: 30)",
+                            "example": 30
+                          },
+                          "retry_failed": {
+                            "type": "integer",
+                            "description": "Minutes to wait if failed (default: 30)",
+                            "example": 30
+                          }
+                        },
+                        "example": {
+                          "retry_count": 3,
+                          "retry_busy": 30,
+                          "retry_not_picked": 30,
+                          "retry_failed": 30
+                        }
+                      },
+                      "call_time": {
+                        "type": "object",
+                        "description": "Time window configuration for calls",
+                        "properties": {
+                          "call_start_time": {
+                            "type": "string",
+                            "description": "When calls can start (default: 08:00)",
+                            "default": "08:00",
+                            "example": "08:00"
+                          },
+                          "call_end_time": {
+                            "type": "string",
+                            "description": "When calls must end (default: 20:00)",
+                            "default": "20:00",
+                            "example": "20:00"
+                          },
+                          "timezone": {
+                            "type": "string",
+                            "description": "Timezone for call times (default: Asia/Kolkata)",
+                            "default": "Asia/Kolkata",
+                            "example": "Asia/Kolkata"
+                          },
+                          "scheduled_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Schedule the call for a specific date and time (ISO 8601 format). When provided, the call will be queued and executed at this exact time. The call_start_time and call_end_time window still applies as additional validation. Use this for precise scheduling of individual calls. Format: YYYY-MM-DDTHH:MM:SS",
+                            "example": "2025-11-24T01:55:00"
+                          }
+                        },
+                        "example": {
+                          "call_start_time": "08:00",
+                          "call_end_time": "20:00",
+                          "timezone": "Asia/Kolkata",
+                          "scheduled_at": "2025-11-24T01:55:00"
+                        }
+                      }
+                    },
+                    "example": {
+                      "idle_timeout_warning": 10,
+                      "idle_timeout_end": 15,
+                      "max_call_length": 300,
+                      "call_retry_config": {
+                        "retry_count": 3,
+                        "retry_busy": 30,
+                        "retry_not_picked": 30,
+                        "retry_failed": 30
+                      },
+                      "call_time": {
+                        "call_start_time": "08:00",
+                        "call_end_time": "20:00",
+                        "timezone": "Asia/Kolkata",
+                        "scheduled_at": "2025-11-24T01:55:00"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response: Details about the initiated call.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "call_id": {
+                          "type": "string",
+                          "example": "31106b7c-9d02-4723-8b07-5bb8d90240cb"
+                        },
+                        "call_direction": {
+                          "type": "string",
+                          "example": "outbound"
+                        },
+                        "call_status": {
+                          "type": "string",
+                          "example": "ongoing"
+                        },
+                        "initiated_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-11-24T07:33:49.629642"
+                        },
+                        "agent_id": {
+                          "type": "string",
+                          "example": "a31f36c4-c8ea-4c4b-9ad6-743dabacafbd"
+                        },
+                        "custom_args_values": {
+                          "type": "object",
+                          "description": "Custom variables passed in the request",
+                          "example": {
+                            "callee_name": "abhishek",
+                            "mobile_number": "+912332423423",
+                            "transfer_to": "+917404243687"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Call initiated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters or request format.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "invalid_parameter"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Missing required field"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "401 Unauthorized"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid credentials"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "500 Internal Server Error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "An unexpected error occurred on the server."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/history": {
+      "get": {
+        "tags": [
+          "calling"
+        ],
+        "summary": "Get Call History",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Call History | Revenueable AI"
+          }
+        },
+        "description": "Retrieves the history of calls made through the Revenueable AI platform with optional filtering and pagination.",
+        "operationId": "getCallHistory",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "label": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://prod-api.revenueable.ai/ca/api/v0/calling/history?start_date=2025-09-25T00:00:00%2B05:30&end_date=2025-09-25T23:59:59%2B05:30&limit=50&offset=20&agent_id=830f767a-397e-4b39-82ff-235cd344e2f9&status=completed&bulk_list_id=123e4567-e89b-12d3-a456-426614174000' \\\n  --header 'X-API-KEY: <x-api-key>'"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Filter calls starting from this date (ISO 8601 format with timezone).",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2025-09-25T00:00:00+05:30",
+              "example": "2025-09-25T00:00:00+05:30"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "Filter calls up to this date (ISO 8601 format with timezone).",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2025-09-25T23:59:59+05:30",
+              "example": "2025-09-25T23:59:59+05:30"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of calls to return (default: 10).",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "example": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of calls to skip (default: 0).",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 20
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter calls by assistant ID.",
+            "schema": {
+              "type": "string",
+              "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter calls by status.",
+            "schema": {
+              "type": "string",
+              "example": "completed"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "Filter calls by bulk list ID.",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: Call history. Response format depends on download_format parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "calls": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "to_number": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "transcript": {
+                            "type": "string"
+                          },
+                          "audio_recording": {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "agent": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "agent_name": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "call_duration": {
+                            "type": "number"
+                          },
+                          "call_attempt_time": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "call_cost": {
+                            "type": "number"
+                          },
+                          "call_type": {
+                            "type": "string"
+                          },
+                          "inbound_from": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "offset": {
+                      "type": "integer"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "examples": {
+                  "regular_response": {
+                    "summary": "Regular call history (download=false)",
+                    "value": {
+                      "calls": [
+                        {
+                          "id": "34a29572-9e09-453d-bcb8-90cdbb157c79",
+                          "to_number": "+918882876897",
+                          "name": "abhishek",
+                          "status": "completed",
+                          "transcript": "[{\"bot\": \"Hi there! I'm Marcel from sdfasd. We're conducting a brief survey about asdfasdf to improve our services. Your feedback\"}, {\"bot\": \"is valuable to us.\"}]",
+                          "audio_recording": "https://aps1.media.plivo.com/v1/Account/MAZJNLNJIYNWMZYZHIMM/Recording/e99c9f6b-1d1e-4290-857d-1524d8204aad.mp3",
+                          "created_at": "2025-11-24T11:37:43.678043+00:00",
+                          "agent": {
+                            "id": "5d7cdc09-6d51-4468-93c6-a0b8e5ad3f22",
+                            "agent_name": "test after prod",
+                            "agent_version_id": "387bd8f1-5748-4006-b7fe-6a6455e9d45d",
+                            "orchestration_mode": "single_node",
+                            "version": {
+                              "version_id": "387bd8f1-5748-4006-b7fe-6a6455e9d45d",
+                              "version_slug": "v1"
+                            }
+                          },
+                          "call_duration": 7.98,
+                          "call_attempt_time": "2025-11-24T11:37:48.549486+00:00",
+                          "call_cost": 0.2,
+                          "call_type": "outbound",
+                          "inbound_from": null,
+                          "credits_processed": true,
+                          "from_numbers": [
+                            "+912269976804"
+                          ],
+                          "voicemail_detected": false
+                        }
+                      ],
+                      "limit": 10,
+                      "offset": 0,
+                      "count": 1,
+                      "total": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters or request format.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "invalid_parameter"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid date format for start_date."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "401 Unauthorized"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid credentials"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "500 Internal Server Error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "An unexpected error occurred on the server."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/history/download": {
+      "post": {
+        "tags": [
+          "calling"
+        ],
+        "summary": "Download Call History",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Download Call History | Revenueable AI"
+          }
+        },
+        "description": "Downloads call history data in CSV format. Supports bulk download of call records with optional filtering. Use 'include_analysis=true' to include call analysis data (platform_analysis and client_analysis) in the export.",
+        "operationId": "downloadCallHistory",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "label": "cURL",
+            "source": "curl --request POST \\\n  --url 'https://prod-api.revenueable.ai/ca/api/v0/calling/history/download?start_date=2025-09-25T00:00:00%2B05:30&end_date=2025-09-25T23:59:59%2B05:30&agent_id=830f767a-397e-4b39-82ff-235cd344e2f9&status=completed&include_analysis=true&call_type=outbound&bulk_list_id=123e4567-e89b-12d3-a456-426614174000&voicemail=false&from_number=%2B1234567890&to_number=%2B0987654321&call_id=550e8400-e29b-41d4-a716-446655440000&limit=5000&offset=0' \\\n  --header 'X-API-KEY: <x-api-key>'"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Filter calls starting from this date (ISO 8601 format with timezone)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2025-09-25T00:00:00+05:30",
+              "example": "2025-09-25T00:00:00+05:30"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "Filter calls up to this date (ISO 8601 format with timezone)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2025-09-25T23:59:59+05:30",
+              "example": "2025-09-25T23:59:59+05:30"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter by agent ID(s) - can be repeated for multiple agents.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "830f767a-397e-4b39-82ff-235cd344e2f9"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by call status.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "completed"
+            }
+          },
+          {
+            "name": "include_analysis",
+            "in": "query",
+            "description": "Include call analysis data (platform_analysis and client_analysis) in the export.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": true
+            }
+          },
+          {
+            "name": "call_type",
+            "in": "query",
+            "description": "Filter by call type.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "inbound",
+                "outbound",
+                "webcall"
+              ],
+              "example": "outbound"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "Filter by bulk list ID.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "voicemail",
+            "in": "query",
+            "description": "Filter by voicemail status.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          },
+          {
+            "name": "from_number",
+            "in": "query",
+            "description": "Filter by caller phone number.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "+1234567890"
+            }
+          },
+          {
+            "name": "to_number",
+            "in": "query",
+            "description": "Filter by callee phone number.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "+0987654321"
+            }
+          },
+          {
+            "name": "call_id",
+            "in": "query",
+            "description": "Filter by specific call ID.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of call records to download.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1000,
+              "example": 5000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of call records to skip for pagination.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Call history download successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message when email format is used",
+                      "example": "Call history export has been queued. You will receive an email shortly."
+                    }
+                  },
+                  "example": {
+                    "message": "Call history export has been queued. You will receive an email shortly."
+                  }
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "ZIP file containing CSV call history data"
+                }
+              },
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "ZIP file containing CSV call history data with headers like: id, to_number, name, status, transcript, recording_url, agent_id, initiation_time, etc."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "invalid_parameter"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid date format"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "401 Unauthorized"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid credentials"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "500 Internal Server Error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "An unexpected error occurred"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/call-details": {
+      "get": {
+        "tags": [
+          "calling"
+        ],
+        "summary": "Get Call Details",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Call Details | Revenueable AI"
+          }
+        },
+        "description": "Retrieves detailed information about a specific call using its unique identifier. Use the send_analysis parameter to include analysis data in the response.",
+        "operationId": "getCallDetails",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "(Required) The unique identifier (UUID) of the call.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            }
+          },
+          {
+            "name": "send_analysis",
+            "in": "query",
+            "description": "(Optional) Whether to include analysis data (platform_analysis and client_analysis) in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Call details retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier of the call",
+                          "example": "550e8400-e29b-41d4-a716-446655440000"
+                        },
+                        "call_direction": {
+                          "type": "string",
+                          "description": "The direction of the call",
+                          "enum": [
+                            "inbound",
+                            "outbound",
+                            "webcall"
+                          ],
+                          "example": "outbound"
+                        },
+                        "call_status": {
+                          "type": "string",
+                          "description": "The current status of the call",
+                          "example": "completed"
+                        },
+                        "call_sub_status": {
+                          "type": "string",
+                          "description": "The sub-status of the call",
+                          "example": "ACCEPTED"
+                        },
+                        "from_number": {
+                          "type": "string",
+                          "description": "The phone number the call was made from",
+                          "example": "+1234567890"
+                        },
+                        "to_number": {
+                          "type": "string",
+                          "description": "The phone number the call was made to",
+                          "example": "+0987654321"
+                        },
+                        "callee_name": {
+                          "type": "string",
+                          "description": "The name of the person called",
+                          "example": "John Doe"
+                        },
+                        "agent_id": {
+                          "type": "string",
+                          "description": "The ID of the agent that handled the call",
+                          "example": "agent-123-456"
+                        },
+                        "initiation_time": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "When the call was initiated",
+                          "example": "2024-01-15T14:30:00Z"
+                        },
+                        "recording_url": {
+                          "type": "string",
+                          "description": "URL to the call recording",
+                          "example": "https://example.com/recordings/call-123.mp3"
+                        },
+                        "transcription_url": {
+                          "type": "array",
+                          "description": "Array of conversation turns between bot and user",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "bot": {
+                                "type": "string",
+                                "description": "Bot's message"
+                              },
+                              "user": {
+                                "type": "string",
+                                "description": "User's message"
+                              }
+                            }
+                          },
+                          "example": [
+                            {
+                              "bot": "Hello, how can I help you today?"
+                            },
+                            {
+                              "user": "I need information about my order"
+                            },
+                            {
+                              "bot": "I'd be happy to help you with that. Can you provide your order number?"
+                            },
+                            {
+                              "user": "Sure, it's ORDER-12345"
+                            }
+                          ]
+                        },
+                        "platform_analysis": {
+                          "type": "object",
+                          "description": "Platform-generated analysis of the call (only included when send_analysis=true)",
+                          "example": {
+                            "sentiment": "positive",
+                            "call_outcome": "successful",
+                            "duration_score": 8.5
+                          }
+                        },
+                        "client_analysis": {
+                          "type": "object",
+                          "description": "Client-specific analysis of the call (only included when send_analysis=true)",
+                          "example": {
+                            "lead_score": 85,
+                            "follow_up_required": true,
+                            "customer_satisfaction": "high"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "basic_response": {
+                    "summary": "Basic call details (send_analysis=false)",
+                    "value": {
+                      "status": "success",
+                      "data": {
+                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                        "call_direction": "outbound",
+                        "call_status": "completed",
+                        "call_sub_status": "ACCEPTED",
+                        "from_number": "+1234567890",
+                        "to_number": "+0987654321",
+                        "callee_name": "John Doe",
+                        "agent_id": "agent-123-456",
+                        "initiation_time": "2024-01-15T14:30:00Z",
+                        "recording_url": "https://example.com/recordings/call-123.mp3",
+                        "transcription_url": [
+                          {
+                            "bot": "Hello, how can I help you today?"
+                          },
+                          {
+                            "user": "I need information about my order"
+                          },
+                          {
+                            "bot": "I'd be happy to help you with that. Can you provide your order number?"
+                          },
+                          {
+                            "user": "Sure, it's ORDER-12345"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "with_analysis": {
+                    "summary": "Call details with analysis (send_analysis=true)",
+                    "value": {
+                      "status": "success",
+                      "data": {
+                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                        "call_direction": "outbound",
+                        "call_status": "completed",
+                        "call_sub_status": "ACCEPTED",
+                        "from_number": "+1234567890",
+                        "to_number": "+0987654321",
+                        "callee_name": "John Doe",
+                        "agent_id": "agent-123-456",
+                        "initiation_time": "2024-01-15T14:30:00Z",
+                        "recording_url": "https://example.com/recordings/call-123.mp3",
+                        "transcription_url": [
+                          {
+                            "bot": "Hello, how can I help you today?"
+                          },
+                          {
+                            "user": "I need information about my order"
+                          },
+                          {
+                            "bot": "I'd be happy to help you with that. Can you provide your order number?"
+                          },
+                          {
+                            "user": "Sure, it's ORDER-12345"
+                          }
+                        ],
+                        "platform_analysis": {
+                          "sentiment": "positive",
+                          "call_outcome": "successful",
+                          "duration_score": 8.5
+                        },
+                        "client_analysis": {
+                          "lead_score": 85,
+                          "follow_up_required": true,
+                          "customer_satisfaction": "high"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - The call does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Call not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "An unexpected error occurred."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/contact/{list_id}": {
+      "delete": {
+        "tags": [
+          "calling"
+        ],
+        "summary": "Delete Contact List",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Delete Contact List | Revenueable AI"
+          }
+        },
+        "description": "Deletes a contact list and all associated contacts by list ID.",
+        "operationId": "deleteContactList",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "list_id",
+            "in": "path",
+            "description": "(Required) The unique identifier of the contact list to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact list deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bulk list deleted successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Not Found - Contact list not found."
+          },
+          "500": {
+            "description": "Internal Server Error - Something went wrong on our end."
+          }
+        }
+      }
+    },
+    "/campaign/all": {
+      "get": {
+        "tags": [
+          "campaign"
+        ],
+        "summary": "Get All Campaigns",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get All Campaigns | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a paginated list of campaigns for the current user with optional call count information.",
+        "operationId": "getAllCampaigns",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "call_count",
+            "in": "query",
+            "description": "Whether to include call count for each campaign (default: true).",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of campaigns to return (default: 10).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of campaigns to skip for pagination (default: 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of campaigns retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "campaigns": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Campaign unique identifier",
+                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Campaign name",
+                            "example": "Q4 Sales Campaign"
+                          },
+                          "campaign_status": {
+                            "type": "string",
+                            "description": "Current status of the campaign",
+                            "example": "completed",
+                            "enum": [
+                              "pending",
+                              "registered",
+                              "running",
+                              "completed",
+                              "paused"
+                            ]
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Campaign creation timestamp",
+                            "example": "2024-01-15T14:30:00Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Campaign last update timestamp",
+                            "example": "2024-01-15T16:45:00Z"
+                          },
+                          "campaign_start_time": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Scheduled start time for the campaign",
+                            "example": "2024-01-16T09:00:00Z"
+                          },
+                          "campaign_end_time": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Scheduled end time for the campaign",
+                            "example": "2024-01-16T17:00:00Z"
+                          },
+                          "total_count": {
+                            "type": "integer",
+                            "description": "Total number of calls in campaign (only included when call_count=true)",
+                            "example": 150
+                          },
+                          "registered_count": {
+                            "type": "integer",
+                            "description": "Number of registered calls (only included when call_count=true)",
+                            "example": 120
+                          },
+                          "completed_count": {
+                            "type": "integer",
+                            "description": "Number of completed calls (only included when call_count=true)",
+                            "example": 85
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "description": "Total number of campaigns available",
+                          "example": 25
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "description": "Number of campaigns requested per page",
+                          "example": 10
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "description": "Number of campaigns skipped",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "An unexpected error occurred."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign/start": {
+      "post": {
+        "tags": [
+          "campaign"
+        ],
+        "summary": "Start Campaign",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Start Campaign | Revenueable AI"
+          }
+        },
+        "description": "Initiates a new campaign with the specified configuration.",
+        "operationId": "startCampaign",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id",
+                  "list_id",
+                  "from_numbers"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "string",
+                    "description": "(Required) ID of the agent that will handle the calls.",
+                    "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                  },
+                  "list_id": {
+                    "type": "string",
+                    "description": "(Required) ID of the uploaded campaign contact list.",
+                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                  },
+                  "from_numbers": {
+                    "type": "array",
+                    "description": "(Required) Array of phone numbers to use for outbound calls.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "+1234567890",
+                      "+0987654321"
+                    ]
+                  }
+                },
+                "example": {
+                  "agent_id": "830f767a-397e-4b39-82ff-235cd344e2f9",
+                  "list_id": "123e4567-e89b-12d3-a456-426614174000",
+                  "from_numbers": [
+                    "+1234567890"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Campaign started successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "Success message indicating campaign registration",
+                      "example": "campaign registered successfully!"
+                    },
+                    "has_ongoing_calls": {
+                      "type": "boolean",
+                      "description": "Whether the workspace has other ongoing calls",
+                      "example": false
+                    }
+                  },
+                  "example": {
+                    "status": "campaign registered successfully!",
+                    "has_ongoing_calls": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Invalid agent_id."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "An unexpected error occurred."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign/save": {
+      "post": {
+        "tags": [
+          "campaign"
+        ],
+        "summary": "Upload Campaign Contact List",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Upload Campaign Contact List | Revenueable AI"
+          }
+        },
+        "description": "Uploads a contact list for a campaign. Accepts a CSV file and campaign configuration as form data.",
+        "operationId": "uploadCampaignContactList",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "variables_map": {
+                    "type": "string",
+                    "description": "(Required) JSON string mapping variable names to columns",
+                    "example": {
+                      "callee_name": "Name",
+                      "company_name": "Company"
+                    }
+                  },
+                  "agent_id": {
+                    "type": "string",
+                    "description": "(Required) Unique identifier for the agent",
+                    "example": "830f767a-397e-4b39-82ff-235cd344e2f9"
+                  },
+                  "call_config": {
+                    "type": "string",
+                    "description": "(Required) JSON string of call configuration",
+                    "example": {
+                      "idle_timeout_warning": 10,
+                      "max_call_length": 300
+                    }
+                  },
+                  "country_code": {
+                    "type": "string",
+                    "description": "(Required) Country code for the campaign",
+                    "example": "US"
+                  },
+                  "campaign_start_time": {
+                    "type": "string",
+                    "description": "(Required) Start time for the campaign (DD/MM/YYYY, HH:MM format)",
+                    "example": "18/10/2025, 09:00"
+                  },
+                  "campaign_end_time": {
+                    "type": "string",
+                    "description": "(Required) End time for the campaign (DD/MM/YYYY, HH:MM format)",
+                    "example": "18/10/2025, 21:05"
+                  },
+                  "campaign_name": {
+                    "type": "string",
+                    "description": "(Required) Name of the campaign.",
+                    "example": "Q1 Sales Campaign"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "(Required) CSV file containing the contact list.",
+                    "example": "contacts.csv"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact list uploaded and campaign saved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contacts imported successfully!"
+                    },
+                    "list_id": {
+                      "type": "string",
+                      "description": "ID of the created campaign list",
+                      "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "custom_args_values": {
+                      "type": "array",
+                      "description": "Array of custom variables for each contact",
+                      "items": {
+                        "type": "object"
+                      },
+                      "example": [
+                        {
+                          "callee_name": "John Doe",
+                          "company_name": "XYZ Corp",
+                          "mobile_number": "+1234567890"
+                        }
+                      ]
+                    },
+                    "total_rows": {
+                      "type": "integer",
+                      "description": "Total number of rows in uploaded CSV",
+                      "example": 100
+                    },
+                    "successful_rows": {
+                      "type": "integer",
+                      "description": "Number of successfully processed rows",
+                      "example": 98
+                    },
+                    "failed_rows": {
+                      "type": "integer",
+                      "description": "Number of rows that failed validation",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input or file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Invalid file format."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "An unexpected error occurred."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/platform-analytics": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Platform Analytics",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Platform Analytics | Revenueable AI"
+          }
+        },
+        "description": "Retrieves comprehensive platform analytics including performance metrics and summaries.",
+        "operationId": "getPlatformAnalytics",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter by specific agent ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "Filter by specific bulk list/campaign ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "voicemail",
+            "in": "query",
+            "description": "Filter by voicemail status",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Platform analytics retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "performance_metrics": {
+                      "type": "object",
+                      "description": "Performance metrics by different categories"
+                    },
+                    "metrics_summary": {
+                      "type": "object",
+                      "description": "Summary of key metrics"
+                    },
+                    "cached": {
+                      "type": "boolean",
+                      "description": "Whether the response was served from cache"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/analytics/drill-down-analytics": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Drill-Down Analytics",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Drill-Down Analytics | Revenueable AI"
+          }
+        },
+        "description": "Retrieves detailed analytics for a specific bulk list/campaign with drill-down capabilities.",
+        "operationId": "getDrillDownAnalytics",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "(Required) Bulk list/campaign ID to get drill-down analytics for",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter by specific agent ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "voicemail",
+            "in": "query",
+            "description": "Filter by voicemail status",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Drill-down analytics retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "performance_metrics": {
+                      "type": "object",
+                      "description": "Detailed performance metrics for the bulk list"
+                    },
+                    "cached": {
+                      "type": "boolean",
+                      "description": "Whether the response was served from cache"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required bulk_list_id parameter."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/analytics/number-analytics": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Number Analytics",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Number Analytics | Revenueable AI"
+          }
+        },
+        "description": "Retrieves analytics broken down by phone numbers.",
+        "operationId": "getNumberAnalytics",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter by specific agent ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "Filter by specific bulk list/campaign ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "voicemail",
+            "in": "query",
+            "description": "Filter by voicemail status",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Number analytics retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "number_analytics": {
+                      "type": "array",
+                      "description": "Analytics data grouped by phone numbers"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/analytics/duration-distribution": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Duration Distribution",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Duration Distribution | Revenueable AI"
+          }
+        },
+        "description": "Retrieves call duration distribution analytics.",
+        "operationId": "getDurationDistribution",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter by specific agent ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "Filter by specific bulk list/campaign ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "voicemail",
+            "in": "query",
+            "description": "Filter by voicemail status",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Duration distribution retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "duration_distribution": {
+                      "type": "object",
+                      "description": "Call duration distribution data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/analytics/classification-analytics": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Classification Analytics",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Get Classification Analytics | Revenueable AI"
+          }
+        },
+        "description": "Retrieves call classification analytics data.",
+        "operationId": "getClassificationAnalytics",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for analytics filter (YYYY-MM-DD format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2025-09-25",
+              "example": "2025-09-25"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "Filter by specific agent ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "bulk_list_id",
+            "in": "query",
+            "description": "Filter by specific bulk list/campaign ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "voicemail",
+            "in": "query",
+            "description": "Filter by voicemail status",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Classification analytics retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "classification_analytics": {
+                      "type": "object",
+                      "description": "Call classification analytics data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/campaign/terminate/agent": {
+      "patch": {
+        "tags": [
+          "termination"
+        ],
+        "summary": "Terminate All Calls by Agent ID",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Terminate All Calls by Agent ID | Revenueable AI"
+          }
+        },
+        "description": "Terminates all active (registered/retry) calls associated with a specific agent across all campaigns.",
+        "operationId": "terminateCallsByAgent",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "string",
+                    "description": "(Required) ID of the agent whose calls should be terminated",
+                    "example": "196d8d88-591e-4e08-8324-2f928d152fff"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calls terminated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Calls terminated successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid agent ID or no terminable calls found."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          }
+        }
+      }
+    },
+    "/campaign/terminate/calls": {
+      "patch": {
+        "tags": [
+          "termination"
+        ],
+        "summary": "Terminate Specific Calls by Call IDs",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Terminate Specific Calls by Call IDs | Revenueable AI"
+          }
+        },
+        "description": "Terminates specific calls using their unique call IDs. Useful when you know exactly which calls to stop.",
+        "operationId": "terminateCallsByIds",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "call_ids"
+                ],
+                "properties": {
+                  "call_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "(Required) Array of call IDs to terminate",
+                    "example": [
+                      "86815974-8a87-4e32-9953-aca4f97868ab",
+                      "9ab99d2d-595c-4ca1-bab7-07d13f253156"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calls terminated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Calls terminated successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid call IDs or no terminable calls found."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          }
+        }
+      }
+    },
+    "/campaign/terminate/campaign": {
+      "patch": {
+        "tags": [
+          "termination"
+        ],
+        "summary": "Terminate All Calls in Campaign",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Terminate All Calls in Campaign | Revenueable AI"
+          }
+        },
+        "description": "Terminates all active (registered/retry) calls within a specific campaign.",
+        "operationId": "terminateCallsByCampaign",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "campaign_id"
+                ],
+                "properties": {
+                  "campaign_id": {
+                    "type": "string",
+                    "description": "(Required) ID of the campaign whose calls should be terminated",
+                    "example": "0b52ca2b-7767-4cb5-ac4c-b2a4f892a856"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calls terminated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Calls terminated successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid campaign ID or no terminable calls found."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          }
+        }
+      }
+    },
+    "/campaign/terminate/campaign-numbers": {
+      "patch": {
+        "tags": [
+          "termination"
+        ],
+        "summary": "Terminate Specific Numbers in Campaign",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Terminate Specific Numbers in Campaign | Revenueable AI"
+          }
+        },
+        "description": "Terminates calls to specific mobile numbers within a campaign. Useful for stopping calls to particular contacts in a campaign.",
+        "operationId": "terminateCallsByCampaignNumbers",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "campaign_id",
+                  "mobile_numbers"
+                ],
+                "properties": {
+                  "campaign_id": {
+                    "type": "string",
+                    "description": "(Required) ID of the campaign",
+                    "example": "0b52ca2b-7767-4cb5-ac4c-b2a4f892a856"
+                  },
+                  "mobile_numbers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "(Required) Array of mobile numbers to terminate within the campaign (max 100)",
+                    "example": [
+                      "+918882876897",
+                      "+918882876898"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calls terminated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Calls terminated successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters or no terminable calls found."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          }
+        }
+      }
+    },
+    "/campaign/terminate/numbers": {
+      "patch": {
+        "tags": [
+          "termination"
+        ],
+        "summary": "Terminate All Calls to Numbers",
+        "x-mint": {
+          "metadata": {
+            "og:title": "Terminate All Calls to Numbers | Revenueable AI"
+          }
+        },
+        "description": "Terminates all active calls (across all campaigns) to specific mobile numbers.",
+        "operationId": "terminateCallsByNumbers",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "mobile_numbers"
+                ],
+                "properties": {
+                  "mobile_numbers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "(Required) Array of mobile numbers to terminate calls for across all campaigns (max 100)",
+                    "example": [
+                      "+918882876897",
+                      "+918882876898"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calls terminated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Calls terminated successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid mobile numbers or no terminable calls found."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          }
+        }
+      }
+    },
+    "/external/kb": {
+      "post": {
+        "tags": [
+          "knowledgebase"
+        ],
+        "summary": "Create Knowledge Base",
+        "x-mint": {
+          "metadata": {
+            "title": "Create Knowledge Base | Revenueable AI",
+            "og:title": "Create Knowledge Base | Revenueable AI"
+          }
+        },
+        "description": "Creates a new non-deterministic knowledge base. Rate limit: 10 requests per hour per workspace. File size limit: 2 MB per file, 5 MB total. Maximum 10 files and 20 URLs per request.",
+        "operationId": "createKnowledgeBase",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "kb_name"
+                ],
+                "properties": {
+                  "kb_name": {
+                    "type": "string",
+                    "description": "(Required) Name of the knowledge base",
+                    "example": "Product Documentation"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "(Optional) Array of files to upload (max 10 files, 2 MB each, 5 MB total)"
+                  },
+                  "urls": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of URLs to index (max 20 URLs)",
+                    "example": "[\"https://example.com/docs\", \"https://example.com/faq\"]"
+                  },
+                  "faqs": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of FAQ objects",
+                    "example": "[{\"question\": \"What is your return policy?\", \"answer\": \"30-day money back guarantee\"}]"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge base created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Knowledge Base creation initiated"
+                    },
+                    "kb_id": {
+                      "type": "string",
+                      "example": "550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    "processing_status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "files_queued": {
+                      "type": "integer",
+                      "example": 3
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters or file size exceeded."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "429": {
+            "description": "Rate limit exceeded - Maximum 10 requests per hour."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "knowledgebase"
+        ],
+        "summary": "Edit Knowledge Base",
+        "x-mint": {
+          "metadata": {
+            "title": "Edit Knowledge Base | Revenueable AI",
+            "og:title": "Edit Knowledge Base | Revenueable AI"
+          }
+        },
+        "description": "Edits an existing knowledge base by adding or removing files, URLs, and FAQs. Rate limit: 20 requests per hour per workspace. File size limit: 2 MB per file, 5 MB total.",
+        "operationId": "editKnowledgeBase",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "kb_id"
+                ],
+                "properties": {
+                  "kb_id": {
+                    "type": "string",
+                    "description": "(Required) ID of the knowledge base to edit",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                  },
+                  "files_to_remove": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of file IDs to remove",
+                    "example": "[\"7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d\", \"8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e\"]"
+                  },
+                  "urls_to_remove": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of URLs to remove",
+                    "example": "[\"https://example.com/old-page\"]"
+                  },
+                  "faqs_to_remove": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of FAQ IDs to remove",
+                    "example": "[\"9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f\", \"0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a\"]"
+                  },
+                  "new_files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "(Optional) Array of new files to upload"
+                  },
+                  "new_urls": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of new URLs to add",
+                    "example": "[\"https://example.com/new-docs\"]"
+                  },
+                  "new_faqs": {
+                    "type": "string",
+                    "description": "(Optional) JSON string array of new FAQ objects",
+                    "example": "[{\"question\": \"Do you ship internationally?\", \"answer\": \"Yes, worldwide shipping available\"}]"
+                  },
+                  "new_files_metadata": {
+                    "type": "string",
+                    "description": "(Optional) JSON string object with metadata for new files",
+                    "example": "{}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge base updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Knowledge Base edit initiated"
+                    },
+                    "kb_id": {
+                      "type": "string",
+                      "example": "550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    "items_removed": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "new_files_queued": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "new_files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "filename": {
+                            "type": "string",
+                            "example": "document.pdf"
+                          },
+                          "file_id": {
+                            "type": "string",
+                            "example": "1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b"
+                          },
+                          "processing_status": {
+                            "type": "string",
+                            "example": "pending"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters."
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Knowledge base not found."
+          },
+          "429": {
+            "description": "Rate limit exceeded - Maximum 20 requests per hour."
+          }
+        }
+      }
+    },
+    "/external/kb/{kb_id}": {
+      "get": {
+        "tags": [
+          "knowledgebase"
+        ],
+        "summary": "Get Knowledge Base by ID",
+        "x-mint": {
+          "metadata": {
+            "title": "Get Knowledge Base | Revenueable AI",
+            "og:title": "Get Knowledge Base | Revenueable AI"
+          }
+        },
+        "description": "Retrieves a specific knowledge base by its ID. Rate limit: 60 requests per hour per workspace.",
+        "operationId": "getKnowledgeBaseById",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "kb_id",
+            "in": "path",
+            "description": "(Required) ID of the knowledge base",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Knowledge base details retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "kb_id": {
+                      "type": "string",
+                      "example": "550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    "kb_name": {
+                      "type": "string",
+                      "example": "Product Documentation"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Processing status of the knowledge base",
+                      "example": "completed"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2024-12-16T13:03:29.947147+00:00"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2024-12-16T14:15:32.123456+00:00"
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "file_type": {
+                            "type": "string"
+                          },
+                          "file_size": {
+                            "type": "number"
+                          },
+                          "filename": {
+                            "type": "string"
+                          },
+                          "file_path": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "urls": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "file_type": {
+                            "type": "string"
+                          },
+                          "file_size": {
+                            "type": "number"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "file_path": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "faqs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "file_id": {
+                            "type": "string"
+                          },
+                          "file_type": {
+                            "type": "string"
+                          },
+                          "file_size": {
+                            "type": "number"
+                          },
+                          "content": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Knowledge base not found."
+          },
+          "429": {
+            "description": "Rate limit exceeded - Maximum 60 requests per hour."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "knowledgebase"
+        ],
+        "summary": "Delete Knowledge Base",
+        "x-mint": {
+          "metadata": {
+            "title": "Delete Knowledge Base | Revenueable AI",
+            "og:title": "Delete Knowledge Base | Revenueable AI"
+          }
+        },
+        "description": "Deletes a knowledge base by its ID. Rate limit: 10 requests per minute per workspace.",
+        "operationId": "deleteKnowledgeBase",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          },
+          {
+            "name": "kb_id",
+            "in": "path",
+            "description": "(Required) ID of the knowledge base to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Knowledge base deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Knowledge Base deleted successfully"
+                    },
+                    "kb_id": {
+                      "type": "string",
+                      "example": "550e8400-e29b-41d4-a716-446655440000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "404": {
+            "description": "Knowledge base not found."
+          },
+          "429": {
+            "description": "Rate limit exceeded - Maximum 10 requests per minute."
+          }
+        }
+      }
+    },
+    "/external/kb/all": {
+      "get": {
+        "tags": [
+          "knowledgebase"
+        ],
+        "summary": "Get All Knowledge Bases",
+        "x-mint": {
+          "metadata": {
+            "title": "Get All Knowledge Bases | Revenueable AI",
+            "og:title": "Get All Knowledge Bases | Revenueable AI"
+          }
+        },
+        "description": "Retrieves all knowledge bases for the current workspace. Rate limit: 60 requests per hour per workspace.",
+        "operationId": "getAllKnowledgeBases",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "description": "(Required) Your Revenueable AI API key.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7251cb4b-3373-43a4-844c-b27a1d45e0c9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all knowledge bases retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kb_id": {
+                        "type": "string",
+                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                      },
+                      "kb_name": {
+                        "type": "string",
+                        "example": "Product Documentation"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "non_deterministic"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-12-16T13:03:29.947147+00:00"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key."
+          },
+          "429": {
+            "description": "Rate limit exceeded - Maximum 60 requests per hour."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    }
+  }
+}

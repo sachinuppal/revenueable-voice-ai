@@ -1,0 +1,189 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "maple",
+  "name": "Revenueable AI",
+  "colors": {
+    "primary": "#9AADEC",
+    "light": "#9AADEC",
+    "dark": "#9AADEC"
+  },
+  "favicon": "/favicon.ico",
+  "font": {
+    "google": "Inter"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "background": {
+    "decoration": "grid"
+  },
+  "icons": {
+    "library": "fontawesome"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "get-started/overview",
+          {
+            "group": "Quick Start",
+            "icon": "rocket",
+            "pages": [
+              "get-started/quick-start/quick-start-guide",
+              "get-started/quick-start/authentication",
+              "get-started/quick-start/api-overview"
+            ]
+          },
+          {
+            "group": "Tutorials",
+            "icon": "code",
+            "pages": [
+              "get-started/tutorials/voice-calling",
+              "get-started/tutorials/making-your-first-call",
+              "get-started/tutorials/setting-up-bulk-calls",
+              "get-started/tutorials/managing-contacts",
+              "get-started/tutorials/embedding-web-call-assistant"
+            ]
+          },
+          {
+            "group": "Best Practices",
+            "icon": "thumbs-up",
+            "pages": [
+              "get-started/best-practices/voice-call-optimization",
+              "get-started/best-practices/web-call-integration",
+              "get-started/best-practices/security-guidelines"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "Webhooks Setup",
+        "tag": "NEW",
+        "pages": [
+          "get-started/webhooks/setup",
+          "get-started/webhooks/payloads",
+          "get-started/webhooks/error-handling"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "tag": "NEW",
+        "pages": [
+          {
+            "group": "Workspace",
+            "pages": [
+              "api-reference/endpoint/workspace/get-workspace-info",
+              "api-reference/endpoint/workspace/list-workspace-users",
+              "api-reference/endpoint/workspace/get-all-user-workspaces",
+              "api-reference/endpoint/workspace/regenerate-api-key"
+            ]
+          },
+          {
+            "group": "Assistant",
+            "pages": [
+              "api-reference/endpoint/assistant/get-assistant-voices",
+              "api-reference/endpoint/assistant/get-assistants",
+              "api-reference/endpoint/assistant/get-assistant-by-id",
+              "api-reference/endpoint/assistant/edit-assistant"
+            ]
+          },
+          {
+            "group": "Numbers",
+            "pages": [
+              "api-reference/endpoint/numbers/get-workspace-numbers"
+            ]
+          },
+          {
+            "group": "Calling",
+            "pages": [
+              "api-reference/endpoint/calling/initiate-individual-call"
+            ]
+          },
+          {
+            "group": "Campaign",
+            "pages": [
+              "api-reference/endpoint/campaign/upload-campaign-contact-list",
+              "api-reference/endpoint/campaign/start-campaign",
+              "api-reference/endpoint/campaign/get-all-campaigns"
+            ]
+          },
+          {
+            "group": "History",
+            "pages": [
+              "api-reference/endpoint/history/get-call-history",
+              "api-reference/endpoint/history/download-call-history",
+              "api-reference/endpoint/history/get-call-details"
+            ]
+          },
+          {
+            "group": "Termination",
+            "pages": [
+              "api-reference/endpoint/terminate/terminate-by-agent",
+              "api-reference/endpoint/terminate/terminate-by-call-ids",
+              "api-reference/endpoint/terminate/terminate-by-campaign",
+              "api-reference/endpoint/terminate/terminate-by-campaign-numbers",
+              "api-reference/endpoint/terminate/terminate-by-numbers"
+            ]
+          },
+          {
+            "group": "Analytics",
+            "pages": [
+              "api-reference/endpoint/analytics/get-platform-analytics",
+              "api-reference/endpoint/analytics/get-drill-down-analytics",
+              "api-reference/endpoint/analytics/get-number-analytics",
+              "api-reference/endpoint/analytics/get-duration-distribution",
+              "api-reference/endpoint/analytics/get-classification-analytics"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "seo": {
+    "metatags": {
+      "og:description": "Setup AI calls for your business with Revenueable AI API",
+      "canonical": "https://docs.revenueable.ai"
+    },
+    "indexing": "all"
+  },
+  "logo": {
+    "light": "/logo/revenueable-logo.png",
+    "dark": "/logo/revenueable-logo.png",
+    "href": "https://www.revenueable.ai"
+  },
+  "api": {
+    "playground": {
+      "display": "interactive"
+    },
+    "mdx": {
+      "server": "https://prod-api.revenueable.ai/ca/api/v0"
+    }
+  },
+  "appearance": {
+    "default": "light"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Contact Us",
+        "href": "mailto:admin@revenueable.ai"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://www.revenueable.ai/dashboard"
+    }
+  },
+  "footer": {},
+  "search": {
+    "prompt": "Search or ask AI"
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "chatgpt"
+    ]
+  }
+}
